@@ -1,21 +1,18 @@
 package dk.easv.mytunes.DAL.db;
 
-import BE.Song;
-import DAL.ISongDataAccess;
+import dk.easv.mytunes.BE.Song;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.time.chrono.ThaiBuddhistEra.BE;
-
 public class SongDAO_DB implements ISongDataAccess {
 
-    private DataBaseConnector SongdatabaseConnector;
+    private DBConnector SongdatabaseConnector;
 
     public SongDAO_DB() throws IOException {
-        SongdatabaseConnector = new DataBaseConnector();
+        SongdatabaseConnector = new DBConnector();
     }
 
     @Override
@@ -26,24 +23,25 @@ public class SongDAO_DB implements ISongDataAccess {
              Statement stmt = conn.createStatement()) {
 
             String sql = "SELECT * " +
-                    "FROM Songs " +
-                    "JOIN Genre ON Songs.GenreID = Genre.GenreID " +
-                    "JOIN Artist ON Songs.ArtistID = Artist.ArtistID;";
+                    "FROM Songs ";
+                   // "JOIN Genre ON Songs.GenreID = Genre.GenreID " +
+                  //  "JOIN Artist ON Songs.ArtistID = Artist.ArtistID;"
 
             ResultSet rs = stmt.executeQuery(sql);
 
             // Loop through rows from the database result set
             while (rs.next()) {
 
-                //Map DB row to Movie object
+
                 int id = rs.getInt("SongID");
                 String artist = rs.getString("ArtistName");
                 String title = rs.getString("SongTitle");
                 String genre = rs.getString("GenreType");
-                int length = rs.getInt("SongDuration");
-                String filePath = rs.getString("FilePath");
+                int duration = rs.getInt("SongDuration");
+                String FilePath = rs.getString("FilePath");
 
-                Song song = new Song(id, artist, title, genre, length, filePath);
+
+                Song song = new Song(id, artist, title, genre, duration, FilePath);
                 allSongs.add(song);
             }
             return allSongs;
